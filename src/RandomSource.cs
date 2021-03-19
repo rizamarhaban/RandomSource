@@ -101,7 +101,7 @@ namespace RandomSaveRestoreContinue
         /// <summary>
         ///    Returns a non-negative random integer that is less than the specified maximum.
         /// </summary>
-        /// <param name="max">
+        /// <param name="maxValue">
         ///    The exclusive upper bound of the random number to be generated. maxValue must
         ///    be greater than or equal to 0.
         /// </param>
