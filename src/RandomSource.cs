@@ -54,7 +54,7 @@ namespace RandomSaveRestoreContinue
             for (int i = 0; i < previousValues.Length; i++)
             {
                 var val = previousValues[i];
-                if (val.Type == "Int32")
+                if (val.Type == TypeCode.Int32)
                 {
                     var intValue = (RandomIntegerValue)val;
                     if (intValue.MinValue == 0 && intValue.MaxValue == 0)
@@ -68,7 +68,7 @@ namespace RandomSaveRestoreContinue
                 }
                 else
                 {
-                    if (val.Type == "Double")
+                    if (val.Type == TypeCode.Double)
                         rnd.Next();
                 }
             }
@@ -191,7 +191,7 @@ namespace RandomSaveRestoreContinue
             /// <summary>
             /// Gets the type of this Random value.
             /// </summary>
-            string Type { get; }
+            TypeCode Type { get; }
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace RandomSaveRestoreContinue
             /// <summary>
             /// Gets the type of this Random value.
             /// </summary>
-            public string Type => typeof(int).Name;
+            public TypeCode Type => TypeCode.Int32;
         }
 
         /// <summary>
@@ -275,7 +275,7 @@ namespace RandomSaveRestoreContinue
             /// <summary>
             /// Gets the type of this Random value.
             /// </summary>
-            public string Type => typeof(double).Name;
+            public TypeCode Type => TypeCode.Double;
         }
 
         /// <summary>
@@ -287,9 +287,9 @@ namespace RandomSaveRestoreContinue
             public override IRandomValue Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
             {
                 using var doc = JsonDocument.ParseValue(ref reader);
-                var type = doc.RootElement.GetProperty("Type").GetString();
+                var type = (TypeCode)doc.RootElement.GetProperty("Type").GetInt32();
 
-                if (type == "Int32")
+                if (type == TypeCode.Int32)
                     return JsonSerializer.Deserialize<RandomIntegerValue>(doc.RootElement.GetRawText());
 
                 return JsonSerializer.Deserialize<RandomDoubleValue>(doc.RootElement.GetRawText());
