@@ -35,6 +35,12 @@ namespace RandomSaveRestoreContinue
             AdvanceRandomToNextIndex(previousValues);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RandomSource"/> class.
+        /// </summary>
+        /// <param name="seed">The seed.</param>
+        /// <param name="previousValuesFromJson">The previous values from json.</param>
+        /// <exception cref="ArgumentNullException">Missing Json string</exception>
         public RandomSource(int seed, string previousValuesFromJson) : this(seed)
         {
             if (string.IsNullOrEmpty(previousValuesFromJson))
