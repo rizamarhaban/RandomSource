@@ -11,18 +11,20 @@ namespace RandomSaveRestoreContinue
     {
         private readonly int seed = 0;
         private readonly HashSet<IRandomValue> values = new();
-
         private int index = 0;
-        private Random rnd = new();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RandomSource"/> class.
+        /// </summary>
+        public RandomSource() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RandomSource"/> class.
         /// </summary>
         /// <param name="seed">The seed.</param>
-        public RandomSource(int seed)
+        public RandomSource(int seed): base(seed)
         {
             this.seed = seed;
-            this.rnd = new(this.seed);
         }
 
         /// <summary>
@@ -59,17 +61,17 @@ namespace RandomSaveRestoreContinue
                     var intValue = (RandomIntegerValue)val;
                     if (intValue.MinValue == 0 && intValue.MaxValue == 0)
                     {
-                        rnd.Next();
+                        base.Next();
                     }
                     else
                     {
-                        rnd.Next(intValue.MinValue, intValue.MaxValue);
+                        base.Next(intValue.MinValue, intValue.MaxValue);
                     }
                 }
                 else
                 {
                     if (val.Type == TypeCode.Double)
-                        rnd.Next();
+                        base.Next();
                 }
             }
         }
@@ -93,7 +95,7 @@ namespace RandomSaveRestoreContinue
         public new int Next()
         {
             index++;
-            var val = rnd.Next();
+            var val = base.Next();
             values.Add(new RandomIntegerValue(index, val, 0, 0));
             return val;
         }
@@ -116,7 +118,7 @@ namespace RandomSaveRestoreContinue
         public new int Next(int maxValue)
         {
             index++;
-            var val = rnd.Next(maxValue);
+            var val = base.Next(maxValue);
             values.Add(new RandomIntegerValue(index, val, 0, maxValue));
             return val;
         }
@@ -142,7 +144,7 @@ namespace RandomSaveRestoreContinue
         {
             index++;
 
-            var val = rnd.Next(minMalue, maxValue);
+            var val = base.Next(minMalue, maxValue);
             values.Add(new RandomIntegerValue(index, val, minMalue, maxValue));
 
             return val;
@@ -160,24 +162,10 @@ namespace RandomSaveRestoreContinue
         {
             index++;
 
-            var val = rnd.NextDouble();
+            var val = base.NextDouble();
             values.Add(new RandomDoubleValue(index, val));
 
             return val;
-        }
-
-        /// <summary>
-        ///   Reset the Random Source.
-        /// </summary>
-        public void Reset()
-        {
-            if (seed == 0)
-                rnd = new();
-            else
-                rnd = new(seed);
-
-            values.Clear();
-            index = 0;
         }
 
         [JsonInterfaceConverter(typeof(RandomValueConverter))]
